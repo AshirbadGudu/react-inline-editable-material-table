@@ -1,25 +1,15 @@
-import { useState } from "react";
+import MaterialTable from "material-table";
+
 import {
   IconButton,
-  InputAdornment,
   makeStyles,
-  Snackbar,
-  OutlinedInput,
-  TextField,
   Card,
-  CardContent,
-  Button,
   CardHeader,
-  CardMedia,
+  Snackbar,
 } from "@material-ui/core";
-import {
-  Email,
-  ExitToApp,
-  LockSharp,
-  Visibility,
-  VisibilityOff,
-} from "@material-ui/icons";
+import { ExitToApp } from "@material-ui/icons";
 import { useAppContext } from "../hooks";
+import { useState } from "react";
 import { Alert } from "@material-ui/lab";
 const useStyles = makeStyles(() => ({
   pageWrapper: {
@@ -31,17 +21,36 @@ const useStyles = makeStyles(() => ({
     background: "linear-gradient(326deg, #a4508b 0%, #5f0a87 74%)",
   },
   cardWrapper: {
-    display: "flex",
+    minWidth: "65%",
+    maxWidth: "95%",
   },
 }));
 const Dashboard = () => {
   const classes = useStyles();
-  const { setIsLoggedIn } = useAppContext();
-
+  const { setIsLoggedIn, data, setData } = useAppContext();
+  const [showAlert, setShowAlert] = useState({
+    msg: "",
+    isOpen: false,
+    color: "",
+  });
   return (
     <>
+      <Snackbar
+        open={showAlert.isOpen}
+        autoHideDuration={6000}
+        onClose={() => setShowAlert({ msg: "", isOpen: false, color: "" })}
+      >
+        <Alert
+          onClose={() =>
+            setShowAlert({ msg: "", isOpen: false, color: "error" })
+          }
+          severity={showAlert.color}
+        >
+          {showAlert.msg}
+        </Alert>
+      </Snackbar>
       <div className={classes.pageWrapper}>
-        <Card>
+        <Card className={classes.cardWrapper}>
           <CardHeader
             title="Dashboard"
             action={
@@ -52,6 +61,97 @@ const Dashboard = () => {
                 <ExitToApp />
               </IconButton>
             }
+          />
+          <MaterialTable
+            options={{
+              actionsColumnIndex: -1,
+              exportButton: true,
+              // filtering: true,
+              // grouping: true,
+              // selection: true,
+            }}
+            columns={[
+              {
+                title: "User Name",
+                field: "name",
+              },
+              { title: "User Password", field: "password" },
+              { title: "User Age", field: "age", type: "numeric" },
+              {
+                title: "User Gender",
+                field: "gender",
+                lookup: { 1: "Male", 2: "Female" },
+              },
+            ]}
+            data={data}
+            editable={{
+              onRowAdd: (newData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    if (
+                      newData?.name &&
+                      newData?.age &&
+                      newData?.gender &&
+                      newData?.password
+                    ) {
+                      setData([...data, newData]);
+                      setShowAlert({
+                        msg: "User Data Added To The List Successfully",
+                        isOpen: true,
+                        color: "success",
+                      });
+                    } else {
+                      setShowAlert({
+                        msg:
+                          "Provide all the correct details of user for creating new user",
+                        isOpen: true,
+                        color: "error",
+                      });
+                    }
+                    resolve();
+                  }, 1000);
+                }),
+              onRowUpdate: (newData, oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    const dataUpdate = [...data];
+                    const index = oldData.tableData.id;
+                    dataUpdate[index] = newData;
+                    if (
+                      newData?.name &&
+                      newData?.age &&
+                      newData?.gender &&
+                      newData?.password
+                    ) {
+                      setData([...dataUpdate]);
+                    } else {
+                      setShowAlert({
+                        msg:
+                          "Please Fill All fields correctly before saving user data",
+                        isOpen: true,
+                        color: "error",
+                      });
+                    }
+                    resolve();
+                  }, 1000);
+                }),
+              onRowDelete: (oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    const dataDelete = [...data];
+                    const index = oldData.tableData.id;
+                    dataDelete.splice(index, 1);
+                    setData([...dataDelete]);
+                    setShowAlert({
+                      msg: "User Data Deleted Successfully",
+                      isOpen: true,
+                      color: "success",
+                    });
+                    resolve();
+                  }, 1000);
+                }),
+            }}
+            title="All Users List"
           />
         </Card>
       </div>

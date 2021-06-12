@@ -73,7 +73,6 @@ const Login = () => {
         return;
       }
       if (adminEmail === email && adminPassword === password) {
-        setShowAlert({ msg: "Login Success", isOpen: true, color: "success" });
         setIsLoggedIn(true);
       }
     } catch (error) {}

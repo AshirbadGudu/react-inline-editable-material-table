@@ -1,2 +1,3 @@
-const App = () => "React App";
+import { Login } from "./pages";
+const App = () => <Login />;
 export default App;

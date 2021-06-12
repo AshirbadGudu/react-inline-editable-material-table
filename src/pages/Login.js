@@ -18,7 +18,7 @@ import {
   VisibilityOff,
 } from "@material-ui/icons";
 import { useAppContext } from "../hooks";
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   formWrapper: {
     display: "flex",
     height: "100vh",
@@ -29,6 +29,10 @@ const useStyles = makeStyles(() => ({
   },
   cardWrapper: {
     display: "flex",
+    [theme.breakpoints.down("sm")]: {
+      flexDirection: "column",
+      width: "95%",
+    },
   },
   inputSpacing: {
     marginBottom: 15,

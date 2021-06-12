@@ -33,6 +33,10 @@ const Dashboard = () => {
     isOpen: false,
     color: "",
   });
+  const handleLogout = () => {
+    localStorage.removeItem("isLoggedInBefore");
+    setIsLoggedIn(false);
+  };
   return (
     <>
       <Snackbar
@@ -54,10 +58,7 @@ const Dashboard = () => {
           <CardHeader
             title="Dashboard"
             action={
-              <IconButton
-                aria-label="logout"
-                onClick={() => setIsLoggedIn(false)}
-              >
+              <IconButton aria-label="logout" onClick={handleLogout}>
                 <ExitToApp />
               </IconButton>
             }

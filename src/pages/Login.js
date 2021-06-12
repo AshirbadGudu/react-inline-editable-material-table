@@ -73,6 +73,7 @@ const Login = () => {
         return;
       }
       if (adminEmail === email && adminPassword === password) {
+        localStorage.setItem("isLoggedInBefore", true);
         setIsLoggedIn(true);
       }
     } catch (error) {}

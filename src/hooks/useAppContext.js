@@ -4,23 +4,12 @@ const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [data, setData] = useState([
-    {
-      name: "user@gmail.com",
-      password: "user@password",
-      age: 18,
-      gender: 2,
-    },
-    {
-      name: "seconduser@gmail.com",
-      password: "seconduser@password",
-      age: 21,
-      gender: 1,
-    },
-  ]);
+  const [data, setData] = useState([]);
   useEffect(() => {
     localStorage.setItem("email", "admin@gmail.com");
     localStorage.setItem("password", "admin@gmail.com");
+    const isLoggedInBefore = localStorage.getItem("isLoggedInBefore");
+    setIsLoggedIn(isLoggedInBefore);
     return () => {};
   }, []);
   return (

@@ -17,3 +17,7 @@ import ReactDOM from "react-dom";
 import App from "./App";
 ReactDOM.render(<App />, document.getElementById("root"));
 ```
+
+### Live Preview
+
+- [Click Here To See Live Preview!](https://react-task-sy.netlify.app)

@@ -3,7 +3,6 @@ import {
   IconButton,
   InputAdornment,
   makeStyles,
-  Snackbar,
   OutlinedInput,
   TextField,
   Card,
@@ -19,7 +18,6 @@ import {
   VisibilityOff,
 } from "@material-ui/icons";
 import { useAppContext } from "../hooks";
-import { Alert } from "@material-ui/lab";
 const useStyles = makeStyles(() => ({
   formWrapper: {
     display: "flex",
@@ -41,16 +39,11 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Login = () => {
-  const { setIsLoggedIn } = useAppContext();
+  const { setIsLoggedIn, setShowAlert } = useAppContext();
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showAlert, setShowAlert] = useState({
-    msg: "",
-    isOpen: false,
-    color: "",
-  });
   const onSubmit = (e) => {
     e.preventDefault();
     try {
@@ -80,18 +73,6 @@ const Login = () => {
   };
   return (
     <>
-      <Snackbar
-        open={showAlert.isOpen}
-        autoHideDuration={6000}
-        onClose={() => setShowAlert({ msg: "", isOpen: false, color: "" })}
-      >
-        <Alert
-          onClose={() => setShowAlert({ msg: "", isOpen: false, color: "" })}
-          severity={showAlert.color}
-        >
-          {showAlert.msg}
-        </Alert>
-      </Snackbar>
       <form onSubmit={onSubmit} className={classes.formWrapper}>
         <Card className={classes.cardWrapper}>
           <CardMedia

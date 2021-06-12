@@ -1,16 +1,7 @@
 import MaterialTable from "material-table";
-
-import {
-  IconButton,
-  makeStyles,
-  Card,
-  CardHeader,
-  Snackbar,
-} from "@material-ui/core";
+import { IconButton, makeStyles, Card, CardHeader } from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
 import { useAppContext } from "../hooks";
-import { useState } from "react";
-import { Alert } from "@material-ui/lab";
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     display: "flex",
@@ -27,32 +18,14 @@ const useStyles = makeStyles(() => ({
 }));
 const Dashboard = () => {
   const classes = useStyles();
-  const { setIsLoggedIn, data, setData } = useAppContext();
-  const [showAlert, setShowAlert] = useState({
-    msg: "",
-    isOpen: false,
-    color: "",
-  });
+  const { setIsLoggedIn, data, setData, setShowAlert } = useAppContext();
+
   const handleLogout = () => {
     localStorage.removeItem("isLoggedInBefore");
     setIsLoggedIn(false);
   };
   return (
     <>
-      <Snackbar
-        open={showAlert.isOpen}
-        autoHideDuration={6000}
-        onClose={() => setShowAlert({ msg: "", isOpen: false, color: "" })}
-      >
-        <Alert
-          onClose={() =>
-            setShowAlert({ msg: "", isOpen: false, color: "error" })
-          }
-          severity={showAlert.color}
-        >
-          {showAlert.msg}
-        </Alert>
-      </Snackbar>
       <div className={classes.pageWrapper}>
         <Card className={classes.cardWrapper}>
           <CardHeader

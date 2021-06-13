@@ -1,23 +1,12 @@
-import { useState } from "react";
+import StyledFirebaseAuth from "react-firebaseui/StyledFirebaseAuth";
 import {
-  IconButton,
-  InputAdornment,
   makeStyles,
-  OutlinedInput,
-  TextField,
   Card,
   CardContent,
-  Button,
   CardHeader,
   CardMedia,
 } from "@material-ui/core";
-import {
-  Email,
-  LockSharp,
-  Visibility,
-  VisibilityOff,
-} from "@material-ui/icons";
-import { useAppContext } from "../hooks";
+import { auth, uiConfig } from "../configs";
 const useStyles = makeStyles((theme) => ({
   formWrapper: {
     display: "flex",
@@ -38,46 +27,16 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 15,
   },
   cover: {
-    width: "100%",
+    width: 250,
   },
 }));
 
 const Login = () => {
-  const { setIsLoggedIn, setShowAlert } = useAppContext();
   const classes = useStyles();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = (e) => {
-    e.preventDefault();
-    try {
-      const adminEmail = localStorage.getItem("email");
-      const adminPassword = localStorage.getItem("password");
-      if (adminEmail !== email) {
-        setShowAlert({
-          msg: "This Email don't have access to admin panel",
-          isOpen: true,
-          color: "error",
-        });
-        return;
-      }
-      if (adminPassword !== password) {
-        setShowAlert({
-          msg: "Please enter right password",
-          isOpen: true,
-          color: "error",
-        });
-        return;
-      }
-      if (adminEmail === email && adminPassword === password) {
-        localStorage.setItem("isLoggedInBefore", true);
-        setIsLoggedIn(true);
-      }
-    } catch (error) {}
-  };
+
   return (
     <>
-      <form onSubmit={onSubmit} className={classes.formWrapper}>
+      <div className={classes.formWrapper}>
         <Card className={classes.cardWrapper}>
           <CardMedia
             className={classes.cover}
@@ -86,59 +45,10 @@ const Login = () => {
           />
           <CardContent>
             <CardHeader title="Login To Access Panel" />
-            <TextField
-              variant="outlined"
-              required
-              fullWidth
-              placeholder="Enter Your Email"
-              name="email"
-              autoComplete="email"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Email />
-                  </InputAdornment>
-                ),
-              }}
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-              }}
-              className={classes.inputSpacing}
-            />
-            <OutlinedInput
-              name="password"
-              autoComplete="password"
-              variant="outlined"
-              placeholder="Enter Your Password"
-              required
-              fullWidth
-              startAdornment={
-                <InputAdornment position="start">
-                  <LockSharp />
-                </InputAdornment>
-              }
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-              className={classes.inputSpacing}
-            />
-            <Button variant="contained" type="submit" fullWidth color="primary">
-              Login
-            </Button>
+            <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={auth} />
           </CardContent>
         </Card>
-      </form>
+      </div>
     </>
   );
 };

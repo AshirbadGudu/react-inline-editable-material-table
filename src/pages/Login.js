@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import { auth, uiConfig } from "../configs";
 const useStyles = makeStyles((theme) => ({
-  formWrapper: {
+  pageWrapper: {
     display: "flex",
     height: "100vh",
     width: "100vw",
@@ -36,7 +36,7 @@ const Login = () => {
 
   return (
     <>
-      <div className={classes.formWrapper}>
+      <div className={classes.pageWrapper}>
         <Card className={classes.cardWrapper}>
           <CardMedia
             className={classes.cover}

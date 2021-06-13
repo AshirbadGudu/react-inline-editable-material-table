@@ -1,6 +1,7 @@
 import { Snackbar } from "@material-ui/core";
 import { Alert } from "@material-ui/lab";
 import { createContext, useContext, useEffect, useState } from "react";
+import { auth } from "../configs";
 
 const AppContext = createContext();
 
@@ -12,12 +13,16 @@ export const AppContextProvider = ({ children }) => {
     isOpen: false,
     color: "",
   });
+  const logout = () => auth.signOut();
   useEffect(() => {
-    localStorage.setItem("email", "admin@gmail.com");
-    localStorage.setItem("password", "admin@gmail.com");
-    const isLoggedInBefore = localStorage.getItem("isLoggedInBefore");
-    setIsLoggedIn(isLoggedInBefore);
-    return () => {};
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setIsLoggedIn(true);
+      } else {
+        setIsLoggedIn(false);
+      }
+    });
+    return unsubscribe;
   }, []);
   return (
     <AppContext.Provider
@@ -28,6 +33,7 @@ export const AppContextProvider = ({ children }) => {
         setData,
         showAlert,
         setShowAlert,
+        logout,
       }}
     >
       <Snackbar
@@ -57,8 +63,17 @@ const useAppContext = () => {
     setData,
     showAlert,
     setShowAlert,
+    logout,
   } = useContext(AppContext);
-  return { isLoggedIn, setIsLoggedIn, data, setData, showAlert, setShowAlert };
+  return {
+    isLoggedIn,
+    setIsLoggedIn,
+    data,
+    setData,
+    showAlert,
+    setShowAlert,
+    logout,
+  };
 };
 
 export default useAppContext;

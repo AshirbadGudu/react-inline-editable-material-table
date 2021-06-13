@@ -18,11 +18,18 @@ const useStyles = makeStyles(() => ({
 }));
 const Dashboard = () => {
   const classes = useStyles();
-  const { setIsLoggedIn, data, setData, setShowAlert } = useAppContext();
+  const { logout, data, setData, setShowAlert } = useAppContext();
 
-  const handleLogout = () => {
-    localStorage.removeItem("isLoggedInBefore");
-    setIsLoggedIn(false);
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      setShowAlert({
+        msg: error.message,
+        isOpen: true,
+        color: "error",
+      });
+    }
   };
   return (
     <>

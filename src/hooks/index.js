@@ -1,2 +1,3 @@
 import useAppContext, { AppContextProvider } from "./useAppContext";
-export { AppContextProvider, useAppContext };
+import useUserList from "./useUserList";
+export { AppContextProvider, useAppContext, useUserList };

@@ -1,7 +1,7 @@
 import MaterialTable from "material-table";
 import { IconButton, makeStyles, Card, CardHeader } from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
-import { useAppContext } from "../hooks";
+import { useAppContext, useUserList } from "../hooks";
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     display: "flex",
@@ -18,8 +18,13 @@ const useStyles = makeStyles(() => ({
 }));
 const Dashboard = () => {
   const classes = useStyles();
-  const { logout, data, setData, setShowAlert } = useAppContext();
-
+  const { logout, setShowAlert } = useAppContext();
+  const {
+    addNewUser,
+    usersList,
+    deleteUserData,
+    updateUserData,
+  } = useUserList();
   const handleLogout = async () => {
     try {
       await logout();
@@ -31,6 +36,7 @@ const Dashboard = () => {
       });
     }
   };
+
   return (
     <>
       <div className={classes.pageWrapper}>
@@ -64,7 +70,7 @@ const Dashboard = () => {
                 lookup: { 1: "Male", 2: "Female" },
               },
             ]}
-            data={data}
+            data={usersList}
             editable={{
               onRowAdd: (newData) =>
                 new Promise((resolve, reject) => {
@@ -75,7 +81,7 @@ const Dashboard = () => {
                       newData?.gender &&
                       newData?.password
                     ) {
-                      setData([...data, newData]);
+                      addNewUser(newData);
                       setShowAlert({
                         msg: "User Data Added To The List Successfully",
                         isOpen: true,
@@ -95,16 +101,13 @@ const Dashboard = () => {
               onRowUpdate: (newData, oldData) =>
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
-                    const dataUpdate = [...data];
-                    const index = oldData.tableData.id;
-                    dataUpdate[index] = newData;
                     if (
                       newData?.name &&
                       newData?.age &&
                       newData?.gender &&
                       newData?.password
                     ) {
-                      setData([...dataUpdate]);
+                      updateUserData(newData);
                     } else {
                       setShowAlert({
                         msg:
@@ -119,10 +122,7 @@ const Dashboard = () => {
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
-                    const dataDelete = [...data];
-                    const index = oldData.tableData.id;
-                    dataDelete.splice(index, 1);
-                    setData([...dataDelete]);
+                    deleteUserData(oldData?.key);
                     setShowAlert({
                       msg: "User Data Deleted Successfully",
                       isOpen: true,

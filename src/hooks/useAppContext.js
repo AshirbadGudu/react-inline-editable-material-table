@@ -7,13 +7,11 @@ const AppContext = createContext();
 
 export const AppContextProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [data, setData] = useState([]);
   const [showAlert, setShowAlert] = useState({
     msg: "",
     isOpen: false,
     color: "",
   });
-  const logout = () => auth.signOut();
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
@@ -24,13 +22,12 @@ export const AppContextProvider = ({ children }) => {
     });
     return unsubscribe;
   }, []);
+  const logout = () => auth.signOut();
   return (
     <AppContext.Provider
       value={{
         isLoggedIn,
         setIsLoggedIn,
-        data,
-        setData,
         showAlert,
         setShowAlert,
         logout,
@@ -59,8 +56,6 @@ const useAppContext = () => {
   const {
     isLoggedIn,
     setIsLoggedIn,
-    data,
-    setData,
     showAlert,
     setShowAlert,
     logout,
@@ -68,8 +63,6 @@ const useAppContext = () => {
   return {
     isLoggedIn,
     setIsLoggedIn,
-    data,
-    setData,
     showAlert,
     setShowAlert,
     logout,

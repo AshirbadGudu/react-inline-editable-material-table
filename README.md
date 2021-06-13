@@ -20,4 +20,4 @@ ReactDOM.render(<App />, document.getElementById("root"));
 
 ### Live Preview
 
-- [Click Here To See Live Preview!](https://react-task-sy.netlify.app)
+- [Click Here To See Live Preview!](https://firecrud-aa9ec.web.app/)

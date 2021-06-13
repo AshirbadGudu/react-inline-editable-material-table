@@ -35,6 +35,7 @@ export const uiConfig = {
     },
     {
       provider: firebase.auth.PhoneAuthProvider.PROVIDER_ID,
+      defaultCountry: "IN",
     },
   ],
 };

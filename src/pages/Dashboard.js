@@ -1,7 +1,14 @@
 import MaterialTable from "material-table";
-import { IconButton, makeStyles, Card, CardHeader } from "@material-ui/core";
+import {
+  IconButton,
+  makeStyles,
+  Card,
+  CardHeader,
+  Avatar,
+} from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
 import { useAppContext, useUserList } from "../hooks";
+import { storage } from "../configs";
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     display: "flex",
@@ -19,12 +26,8 @@ const useStyles = makeStyles(() => ({
 const Dashboard = () => {
   const classes = useStyles();
   const { logout, setShowAlert } = useAppContext();
-  const {
-    addNewUser,
-    usersList,
-    deleteUserData,
-    updateUserData,
-  } = useUserList();
+  const { addNewUser, usersList, deleteUserData, updateUserData } =
+    useUserList();
   const handleLogout = async () => {
     try {
       await logout();
@@ -59,6 +62,29 @@ const Dashboard = () => {
             }}
             columns={[
               {
+                title: "User Photo",
+                field: "photoURL",
+                render: ({ photoURL }) => {
+                  return <Avatar src={photoURL} alt="" />;
+                },
+                editComponent: ({ value, onChange }) => {
+                  return (
+                    <>
+                      <Avatar
+                        src={
+                          value?.target?.files[0]
+                            ? URL.createObjectURL(value?.target?.files[0])
+                            : value ||
+                              "https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_1280.png"
+                        }
+                        alt=""
+                      />
+                      <input type="file" onChange={onChange} />
+                    </>
+                  );
+                },
+              },
+              {
                 title: "User Name",
                 field: "name",
               },
@@ -81,16 +107,24 @@ const Dashboard = () => {
                       newData?.gender &&
                       newData?.password
                     ) {
-                      addNewUser(newData);
-                      setShowAlert({
-                        msg: "User Data Added To The List Successfully",
-                        isOpen: true,
-                        color: "success",
-                      });
+                      const file = newData?.photoURL?.target?.files?.[0];
+                      const fileRef = `Users/${new Date().getTime()}`;
+                      storage
+                        .ref(fileRef)
+                        .put(file)
+                        .then((res) => {
+                          res.ref.getDownloadURL().then((url) => {
+                            addNewUser({ ...newData, fileRef, photoURL: url });
+                            setShowAlert({
+                              msg: "User Data Added To The List Successfully",
+                              isOpen: true,
+                              color: "success",
+                            });
+                          });
+                        });
                     } else {
                       setShowAlert({
-                        msg:
-                          "Provide all the correct details of user for creating new user",
+                        msg: "Provide all the correct details of user for creating new user",
                         isOpen: true,
                         color: "error",
                       });
@@ -107,11 +141,28 @@ const Dashboard = () => {
                       newData?.gender &&
                       newData?.password
                     ) {
-                      updateUserData(newData);
+                      const file = newData?.photoURL?.target?.files?.[0];
+                      const fileRef = newData?.fileRef;
+
+                      if (file) {
+                        storage
+                          .ref(fileRef)
+                          .put(file)
+                          .then((res) => {
+                            res.ref.getDownloadURL().then((url) => {
+                              updateUserData({
+                                ...newData,
+                                fileRef,
+                                photoURL: url,
+                              });
+                            });
+                          });
+                      } else {
+                        updateUserData(newData);
+                      }
                     } else {
                       setShowAlert({
-                        msg:
-                          "Please Fill All fields correctly before saving user data",
+                        msg: "Please Fill All fields correctly before saving user data",
                         isOpen: true,
                         color: "error",
                       });
@@ -122,12 +173,19 @@ const Dashboard = () => {
               onRowDelete: (oldData) =>
                 new Promise((resolve, reject) => {
                   setTimeout(() => {
-                    deleteUserData(oldData?.key);
-                    setShowAlert({
-                      msg: "User Data Deleted Successfully",
-                      isOpen: true,
-                      color: "success",
-                    });
+                    const fileRef = oldData?.fileRef;
+                    console.log(fileRef);
+                    storage
+                      .ref(fileRef)
+                      .delete()
+                      .then(() => {
+                        deleteUserData(oldData?.key);
+                        setShowAlert({
+                          msg: "User Data Deleted Successfully",
+                          isOpen: true,
+                          color: "success",
+                        });
+                      });
                     resolve();
                   }, 1000);
                 }),

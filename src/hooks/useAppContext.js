@@ -10,7 +10,7 @@ export const AppContextProvider = ({ children }) => {
   const [showAlert, setShowAlert] = useState({
     msg: "",
     isOpen: false,
-    color: "",
+    color: "info",
   });
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -53,13 +53,8 @@ export const AppContextProvider = ({ children }) => {
 };
 
 const useAppContext = () => {
-  const {
-    isLoggedIn,
-    setIsLoggedIn,
-    showAlert,
-    setShowAlert,
-    logout,
-  } = useContext(AppContext);
+  const { isLoggedIn, setIsLoggedIn, showAlert, setShowAlert, logout } =
+    useContext(AppContext);
   return {
     isLoggedIn,
     setIsLoggedIn,

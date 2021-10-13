@@ -1,2 +1,2 @@
-import { auth, uiConfig, database, storage } from "./firebaseConfig";
-export { auth, uiConfig, database, storage };
+import { auth, uiConfig, database, storage, firestore } from "./firebaseConfig";
+export { auth, uiConfig, database, storage, firestore };

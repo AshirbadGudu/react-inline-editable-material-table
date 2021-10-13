@@ -8,7 +8,9 @@ import {
 } from "@material-ui/core";
 import { ExitToApp } from "@material-ui/icons";
 import { useAppContext, useUserList } from "../hooks";
-import { storage } from "../configs";
+import { storage, firestore } from "../configs";
+import { useEffect } from "react";
+
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     display: "flex",
@@ -39,6 +41,13 @@ const Dashboard = () => {
       });
     }
   };
+
+  useEffect(() => {
+    // firestore.collection("users").doc("uid").set({
+    //   displayName: "Nani",
+    // });
+    return () => {};
+  }, []);
 
   return (
     <>

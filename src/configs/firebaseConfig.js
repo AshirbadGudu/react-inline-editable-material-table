@@ -3,6 +3,8 @@ import firebase from "firebase";
 import "firebase/auth";
 // Import database from the Firebase
 import "firebase/database";
+// Import firestore from the Firebase
+import "firebase/firestore";
 // Import storage from the Firebase
 import "firebase/storage";
 // Import analytics from the Firebase
@@ -46,6 +48,8 @@ const app = firebase.initializeApp(firebaseConfig);
 export const auth = app.auth();
 
 export const database = app.database();
+
+export const firestore = app.firestore();
 
 export const storage = app.storage();
 
